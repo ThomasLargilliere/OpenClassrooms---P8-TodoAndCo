@@ -25,6 +25,10 @@
                 {{ form_label(form.password.second, 'Tapez le mot de passe à nouveau') }}
                 {{ form_widget(form.password.second, {'attr': {'class': 'form-control'}}) }}
             </div>
+            <div class="mt-4">
+                {{ form_label(form.roles, 'Role') }}
+                {{ form_widget(form.roles, {'attr': {'class': 'form-control'}}) }}
+            </div>
 
             <div class="mt-4">
                 <button type="submit" class="btn btn-success pull-right">Ajouter</button>
