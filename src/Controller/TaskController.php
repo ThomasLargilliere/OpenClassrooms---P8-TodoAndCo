@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Services\TaskService;
-use App\Repository\TaskRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,13 +15,14 @@ class TaskController extends AbstractController
     public function __construct(private TaskService $taskService){}
 
     #[Route('/tasks', name: 'task_list')]
-    public function listAction(TaskRepository $taskRepository)
+    public function listTask()
     {
-        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findAll()]);
+        $tasks = $this->taskService->getTask();
+        return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
 
     #[Route('/tasks/create', name: 'task_create')]
-    public function index(Request $request, ManagerRegistry $doctrine): Response
+    public function createTask(Request $request): Response
     {
         $task = new Task();
         $form = $this->createForm(\App\Form\TaskType::class, $task);
@@ -31,7 +30,6 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $doctrine->getManager();
             $user = $this->getUser();
 
             if ($user === null){
@@ -39,34 +37,29 @@ class TaskController extends AbstractController
                 return $this->redirectToRoute('app_login');                
             }
 
-            $task->setCreatedAt(new \DateTimeImmutable);
-            $task->setAuthor($user);
-            $task->setIsDone(false);
-
-            $em->persist($task);
-            $em->flush();
-
+            $this->taskService->createTask($task, $user);
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
-            return $this->redirectToRoute('task_create');
+            return $this->redirectToRoute('task_list');
         }
 
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
     }
 
     #[Route('/tasks/{id}/toggle', name: 'task_toggle')]
-    public function toggleTask(Task $task, ManagerRegistry $doctrine)
+    public function toggleTask(Task $task)
     {
-        $task->setIsDone(!$task->isIsDone());
-        $em = $doctrine->getManager();
-        $em->flush();
+        $result = $this->taskService->toggleTask($task);
 
-        if ($task->isIsDone()){
-            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
-        } else {
-            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle()));
+        $typeFlash = 'success';
+        $messageFlash = sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle());
+
+        if (!$task->isIsDone()){
+            $typeFlash = 'error';
+            $messageFlash = sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle());
         }
 
+        $this->addFlash($typeFlash, $messageFlash);
         return $this->redirectToRoute('task_list');
     }
 
@@ -77,12 +70,52 @@ class TaskController extends AbstractController
 
         $result = $this->taskService->deleteTask($task, $user);
 
+        $typeFlash = 'success';
+        $messageFlash = 'La tâche a bien été supprimée.';
+
         if (!$result){
-            $this->addFlash('error', 'Vous devez être l\'auteur de la tâche pour la supprimer.');
-        } else {
-            $this->addFlash('success', 'La tâche a bien été supprimée.');
+            $typeFlash = 'error';
+            $messageFlash = 'Vous devez être l\'auteur de la tâche pour la supprimer.';
         }
+
+        $this->addFlash($typeFlash, $messageFlash);
 
         return $this->redirectToRoute('task_list');
     }
+
+    #[Route('/tasks/{id}/edit', name: 'task_edit')]
+    public function editTask(Request $request, Task $task)
+    {
+        $user = $this->getUser();
+
+        if ($user === null){
+            $this->addFlash('error', 'Vous devez être connecté pour modifier une tâche');
+            return $this->redirectToRoute('app_login');                
+        }
+
+        $form = $this->createForm(\App\Form\TaskType::class, $task);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+
+            $result = $this->taskService->editTask($task, $user);
+
+            $typeFlash = 'success';
+            $messageFlash = 'La tâche a bien été modifiée.';
+
+            if (!$result){
+                $typeFlash = 'error';
+                $messageFlash = 'Vous devez être l\'auteur de cette tâche pour la modifier.';                
+            }
+
+            $this->addFlash($typeFlash, $messageFlash);
+            return $this->redirectToRoute('task_list');
+        }
+
+        return $this->render('task/edit.html.twig', [
+            'form' => $form->createView(),
+            'task' => $task,
+        ]);
+    }
+
 }

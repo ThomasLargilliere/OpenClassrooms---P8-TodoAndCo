@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        {{ form_start(form, {'action' : path('task_edit', { 'id' : task.id })}) }}
+            <div>
+                {{ form_label(form.title, 'Nom de la tâche') }}
+                {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mt-4">
+                {{ form_label(form.content, 'Tâche à effectuer') }}
+                {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success pull-right">Modifier</button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

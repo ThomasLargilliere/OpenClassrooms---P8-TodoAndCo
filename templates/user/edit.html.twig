@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block header_title %}<h1>Modifier <strong>{{ user.username }}</strong></h1>{% endblock %}
+{% block header_img %}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        {{ form_start(form, {'action' : path('user_edit', {'id' : user.id})}) }}
+            <div class="text-danger">
+                {{ form_errors(form) }}
+            </div>
+            <div>
+                {{ form_label(form.username, 'Nom d\'utilisateur') }}
+                {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mt-4">
+                {{ form_label(form.email, 'Adresse email') }}
+                {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mt-4">
+                {{ form_label(form.password.first, 'Mot de passe') }}
+                {{ form_widget(form.password.first, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mt-2">
+                {{ form_label(form.password.second, 'Tapez le mot de passe à nouveau') }}
+                {{ form_widget(form.password.second, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mt-4">
+                {{ form_label(form.roles, 'Role') }}
+                {{ form_widget(form.roles, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success pull-right">Modifier</button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

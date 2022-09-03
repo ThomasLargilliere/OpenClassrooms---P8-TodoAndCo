@@ -43,7 +43,10 @@
 
                 {% if app.user %}
                 <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger mt-2">Se déconnecter</a>
-                <a href="{{ path('task_create') }}" class="btn btn-success mt-4">Ajouter une tâche</a>
+                <a href="{{ path('task_list') }}" class="btn btn-success mt-4">Liste des tâches</a>
+                    {% if app.user.roles[0] == "ROLE_ADMIN" %}
+                        <a href="{{ path('user_list') }}" class="btn btn-success mt-2">Liste des utilisateurs</a>
+                    {% endif %}
                 {% endif %}
 
                 {% if not app.user and 'login' != app.request.attributes.get('_route') %}

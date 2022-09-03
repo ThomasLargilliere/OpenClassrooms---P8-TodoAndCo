@@ -39,6 +39,20 @@ class TaskRepository extends ServiceEntityRepository
         }
     }
 
+    public function update(): void
+    {
+        $this->getEntityManager()->flush();
+    }
+
+    public function toggle(Task $entity, bool $flush = false): void
+    {
+        $entity->setIsDone(!$entity->isIsDone());
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
 //    /**
 //     * @return Task[] Returns an array of Task objects
 //     */
