@@ -21,16 +21,17 @@ class UserController extends AbstractController
     public function listUser()
     {
         $user = $this->getUser();
-        if ($user === null){
-            $this->addFlash('error', 'Vous devez être connecté pour voir la liste des utilisateurs');
-            return $this->redirectToRoute('app_login');                
+
+        $userIsConnected = $this->userService->userIsConnected($user);
+        if (!$userIsConnected){
+            return $this->needLogin();
         }
 
-        $result = $this->userService->isAdminUser($user);
-        if (!$result){
-            $this->addFlash('error', 'Vous devez être administrateur pour voir la liste des utilisateurs');
-            return $this->redirectToRoute('app_login');                
+        $isAdminUser = $this->userService->isAdminUser($user);
+        if (!$isAdminUser){
+            return $this->needAdmin();            
         }
+
         $users = $this->userService->getUser();
         return $this->render('user/list.html.twig', ['users' => $users]);
     }
@@ -58,15 +59,15 @@ class UserController extends AbstractController
     public function editUser(Request $request, User $user)
     {
         $userEditer = $this->getUser();
-        if ($userEditer === null){
-            $this->addFlash('error', 'Vous devez être connecté pour modifier un utilisateur');
-            return $this->redirectToRoute('app_login');                
+
+        $userIsConnected = $this->userService->userIsConnected($userEditer);
+        if (!$userIsConnected){
+            return $this->needLogin();
         }
 
-        $result = $this->userService->isAdminUser($userEditer);
-        if (!$result){
-            $this->addFlash('error', 'Vous devez être administrateur pour modifier un utilisateur');
-            return $this->redirectToRoute('app_login');                
+        $isAdminUser = $this->userService->isAdminUser($userEditer);
+        if (!$isAdminUser){
+            return $this->needAdmin();            
         }
 
         $form = $this->createForm(\App\Form\UserType::class, $user);
@@ -88,5 +89,16 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+    }
+
+    public function needLogin()
+    {
+        $this->addFlash('error', 'Vous devez être connecté pour voir la liste des utilisateurs');
+        return $this->redirectToRoute('app_login');          
+    }
+    public function needAdmin()
+    {
+        $this->addFlash('error', 'Vous devez être administrateur pour voir la liste des utilisateurs');
+        return $this->redirectToRoute('app_login');        
     }
 }

@@ -13,7 +13,7 @@ class LoginController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils, TranslatorInterface $translator): Response
     {
-        if ($this->getUser()) {
+        if ($this->getUser()){
             return $this->redirectToRoute('homepage');
         }
 
