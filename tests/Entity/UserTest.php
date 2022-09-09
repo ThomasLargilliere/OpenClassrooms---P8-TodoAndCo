@@ -38,4 +38,16 @@ class UserTest extends KernelTestCase
         // THEN
         $this->assertIsString($result);
     }
+
+    public function testGetEmail()
+    {
+        // GIVEN
+        $user = $this->userRepository->findOneById(1);
+
+        // WHEN
+        $result = $user->getEmail();
+
+        // THEN
+        $this->assertIsString($result);
+    }
 }
