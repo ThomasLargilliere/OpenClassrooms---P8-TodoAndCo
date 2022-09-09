@@ -24,7 +24,7 @@ class UserRepositoryTest extends KernelTestCase
         $userToDelete = $this->userRepository->findOneByUsername('toto'); 
 
         // WHEN
-        $result = $this->userRepository->remove($userToDelete);
+        $result = $this->userRepository->remove($userToDelete, true);
 
         // THEN
         $this->assertEmpty($result);
