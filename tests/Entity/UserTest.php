@@ -26,4 +26,16 @@ class UserTest extends KernelTestCase
         // THEN
         $this->assertIsInt($result);
     }
+
+    public function testGetUserIdentifier()
+    {
+        // GIVEN
+        $user = $this->userRepository->findOneById(1);
+
+        // WHEN
+        $result = $user->getUserIdentifier();
+
+        // THEN
+        $this->assertIsString($result);
+    }
 }
