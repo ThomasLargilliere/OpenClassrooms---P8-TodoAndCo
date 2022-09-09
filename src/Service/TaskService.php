@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Services;
+namespace App\Service;
 
 use App\Entity\Task;
 use App\Entity\User;
 use App\Repository\TaskRepository;
-use App\Services\UserService;
+use App\Service\UserService;
 
 class TaskService
 {
