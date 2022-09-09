@@ -102,4 +102,30 @@ class TaskServiceTest extends KernelTestCase
         // THEN
         $this->assertTrue($result);
     }
+
+    public function testEditTaskWhenUserConnectedIsNotAuthor()
+    {
+        // GIVEN
+        $userConnected = new User();
+        $task = (new Task)->setAuthor(new User);
+
+        // WHEN
+        $result = $this->taskService->editTask($task, $userConnected);
+
+        // THEN
+        $this->assertFalse($result);
+    }
+
+    public function testEditTaskWhenUserConnectedIsAuthor()
+    {
+        // GIVEN
+        $userConnected = new User();
+        $task = (new Task)->setAuthor($userConnected);
+
+        // WHEN
+        $result = $this->taskService->editTask($task, $userConnected);
+
+        // THEN
+        $this->assertTrue($result);
+    }
 }
