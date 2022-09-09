@@ -3,7 +3,6 @@
 namespace App\Tests\Service;
 
 use App\Entity\Task;
-use DateTimeImmutable;
 use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -16,7 +15,7 @@ class TaskTest extends KernelTestCase
         $this->taskRepository = static::getContainer()->get(TaskRepository::class);
     }
 
-    public function testGetId()
+    public function testGetTaskId()
     {
         // GIVEN
         $task = $this->taskRepository->findOneById(1);
@@ -28,7 +27,7 @@ class TaskTest extends KernelTestCase
         $this->assertIsInt($result);
     }
 
-    public function testGetCreatedAt()
+    public function testGetTaskCreatedAt()
     {
         // GIVEN
         $task = $this->taskRepository->findOneById(1);
@@ -40,7 +39,7 @@ class TaskTest extends KernelTestCase
         $this->assertIsObject($result);
     }
 
-    public function testGetTitle()
+    public function testGetTaskTitle()
     {
         // GIVEN
         $task = $this->taskRepository->findOneById(1);
@@ -52,7 +51,7 @@ class TaskTest extends KernelTestCase
         $this->assertIsString($result);
     }
 
-    public function testGetContent()
+    public function testGetTaskContent()
     {
         // GIVEN
         $task = $this->taskRepository->findOneById(1);
