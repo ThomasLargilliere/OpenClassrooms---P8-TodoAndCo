@@ -64,4 +64,30 @@ class UserServiceTest extends KernelTestCase
         // THEN
         $this->assertFalse($result);
     }
+
+    public function testEditUserWhenUserEditerIsAdmin()
+    {
+        // GIVEN
+        $userEdited = (new User)->setPassword('123')->setUsername("Test")->setEmail("test@test.fr");
+        $userEditer = (new User)->setRoles(['ROLE_ADMIN']);
+
+        // WHEN
+        $result = $this->userService->editUser($userEditer, $userEdited);
+
+        // THEN
+        $this->assertTrue($result);
+    }
+
+    public function testEditUserWhenUserEditerIsNotAdmin()
+    {
+        // GIVEN
+        $userEdited = (new User)->setPassword('123')->setUsername("Test")->setEmail("test@test.fr");
+        $userEditer = new User();
+
+        // WHEN
+        $result = $this->userService->editUser($userEditer, $userEdited);
+
+        // THEN
+        $this->assertFalse($result);
+    }
 }
