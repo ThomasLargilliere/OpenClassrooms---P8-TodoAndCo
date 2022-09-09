@@ -18,25 +18,33 @@ class TaskServiceTest extends KernelTestCase
 
     public function testDeleteTaskWhenAuthorIsTheUserConnected()
     {
+        // GIVEN
         $user = new User();
         $task = new Task();
         $task->setAuthor($user);
 
+        // WHEN
         $result = $this->taskService->deleteTask($task, $user);
+
+        // THEN
         $this->assertTrue($result);
     }
 
     public function testDeleteTaskWhenTheUserConnectedIsNotAuthor()
     {
+        // GIVEN
         $userConnected = new User();
         $task = new Task();
         $task->setAuthor(new User());
 
+        // WHEN
         $result = $this->taskService->deleteTask($task, $userConnected);
+
+        // THEN
         $this->assertFalse($result);
     }
 
-    public function testDeleteTaskWhenTheUserConnectedIsNotAuthorButIsAdmin()
+    public function testDeleteTaskWhenTheUserConnectedIsNotAuthorButIsAdminAndAuthorIsAno()
     {
         // GIVEN
         $userConnected = new User('Test');
@@ -52,5 +60,21 @@ class TaskServiceTest extends KernelTestCase
         
         // THEN
         $this->assertTrue($result);
+    }
+
+    public function testDeleteTaskWhenTheUserConnectedIsNotAuthorButIsAdminAndAuthorIsNotAno()
+    {
+        // GIVEN
+        $userConnected = new User('Test');
+        $userConnected->setRoles(['ROLE_ADMIN']);
+
+        $task = new Task();
+        $task->setAuthor(new User());
+
+        // WHEN
+        $result = $this->taskService->deleteTask($task, $userConnected);
+        
+        // THEN
+        $this->assertFalse($result);
     }
 }
