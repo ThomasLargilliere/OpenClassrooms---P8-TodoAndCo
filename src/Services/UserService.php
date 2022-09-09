@@ -48,15 +48,6 @@ class UserService
         return true;
     }
 
-    public function userIsConnected($user)
-    {
-        $type = gettype($user);
-        if ($type != 'object'){
-            return false;
-        }
-        return true;
-    }
-
     public function isAdminUser(User $user)
     {
         if ($user->getRoles()[0] === 'ROLE_ADMIN'){

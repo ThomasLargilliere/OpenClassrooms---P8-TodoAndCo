@@ -6,11 +6,12 @@ namespace App\Services;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Repository\TaskRepository;
+use App\Services\UserService;
 
 class TaskService
 {
 
-    public function __construct(private TaskRepository $repository){}
+    public function __construct(private TaskRepository $repository, private UserService $userService){}
 
     public function getTask()
     {
@@ -36,11 +37,11 @@ class TaskService
      */
     public function deleteTask(Task $task, User $userConnected): bool
     {
-        if ($userConnected !== $task->getAuthor()){
-            return false;
+        if (($userConnected === $task->getAuthor()) || (($task->getAuthor()->getUsername() === "anonyme") && ($this->userService->isAdminUser($userConnected)))){
+            $this->repository->remove($task, true);
+            return true;
         }
-        $this->repository->remove($task, true);
-        return true;
+        return false;
     }
 
     /**

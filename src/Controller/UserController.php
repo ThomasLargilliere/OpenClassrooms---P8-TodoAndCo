@@ -21,9 +21,7 @@ class UserController extends AbstractController
     public function listUser()
     {
         $user = $this->getUser();
-
-        $userIsConnected = $this->userService->userIsConnected($user);
-        if (!$userIsConnected){
+        if (!$user){
             return $this->needLogin();
         }
 
@@ -59,9 +57,7 @@ class UserController extends AbstractController
     public function editUser(Request $request, User $user)
     {
         $userEditer = $this->getUser();
-
-        $userIsConnected = $this->userService->userIsConnected($userEditer);
-        if (!$userIsConnected){
+        if (!$userEditer){
             return $this->needLogin();
         }
 
@@ -94,8 +90,9 @@ class UserController extends AbstractController
     public function needLogin()
     {
         $this->addFlash('error', 'Vous devez être connecté pour voir la liste des utilisateurs');
-        return $this->redirectToRoute('app_login');          
+        return $this->redirectToRoute('app_login');
     }
+    
     public function needAdmin()
     {
         $this->addFlash('error', 'Vous devez être administrateur pour voir la liste des utilisateurs');

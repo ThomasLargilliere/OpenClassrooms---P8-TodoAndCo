@@ -12,6 +12,30 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $lorem = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero dolores architecto illum? Minima harum nihil provident fuga inventore laboriosam accusantium amet natus porro reprehenderit quas, non itaque, voluptatem animi recusandae.';
+        
+        $user = new User();
+        $user->setUsername('anonyme');
+        $user->setPassword('$2y$13$rQJeJZzPvYTrqY4LalaxMeTH8mJY21CewW0s7Ri/i1wWukwhkjr3u'); // 123
+        $user->setEmail('user@anonyme.fr');
+        $user->setRoles(['ROLE_USER']);
+        $manager->persist($user);
+
+        for ($i = 0; $i < 6; $i++){
+            $task = new Task();
+            $task->setTitle('Ma super tâche ' . $i);
+            $task->setContent($lorem);
+            $task->setCreatedAt(new \DateTimeImmutable);
+            $task->setAuthor($user);
+            $rand = rand(1, 2);
+            $done = false;
+            if ($rand == 1){
+                $done = true;
+            }
+            $task->setIsDone($done);
+            $manager->persist($task);
+        }
+
+
 
         $user = new User();
         $user->setUsername('Admin');
