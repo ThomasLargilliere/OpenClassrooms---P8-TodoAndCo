@@ -2,6 +2,7 @@
 
 namespace App\Tests\Repository;
 
+use App\Entity\Task;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -24,6 +25,20 @@ class UserRepositoryTest extends KernelTestCase
 
         // WHEN
         $result = $this->userRepository->remove($userToDelete);
+
+        // THEN
+        $this->assertEmpty($result);
+    }
+
+    public function testUpgradePasswordWhenUserIsEntity()
+    {
+        // GIVEN
+        $user = (new User)->setUsername('toto')->setPassword('123')->setEmail('toto@toto.fr');
+        $this->userRepository->add($user, true);
+        $userToUpgrade = $this->userRepository->findOneByUsername('toto');
+        
+        // WHEN
+        $result = $this->userRepository->upgradePassword($userToUpgrade, '1234');
 
         // THEN
         $this->assertEmpty($result);
