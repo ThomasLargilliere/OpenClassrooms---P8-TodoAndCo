@@ -5,6 +5,7 @@ namespace App\Tests\Service;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Service\TaskService;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class TaskServiceTest extends KernelTestCase
@@ -14,6 +15,7 @@ class TaskServiceTest extends KernelTestCase
     protected function setUp(): void
     {
         $this->taskService = static::getContainer()->get(TaskService::class);
+        $this->userRepository = static::getContainer()->get(UserRepository::class);
     }
 
     public function testDeleteTaskWhenAuthorIsTheUserConnected()
@@ -141,5 +143,18 @@ class TaskServiceTest extends KernelTestCase
         $this->assertClassHasAttribute('createdAt', Task::class);
         $this->assertClassHasAttribute('isDone', Task::class);
         $this->assertClassHasAttribute('author', Task::class);
+    }
+
+    public function testCreateTask()
+    {
+        // GIVEN
+        $user = $this->userRepository->findOneByEmail('admin@admin.fr');
+        $task = (new Task)->setTitle('Title random')->setContent('Content random');
+
+        // WHEN
+        $result = $this->taskService->createTask($task, $user);
+
+        // THEN
+        $this->assertEmpty($result);
     }
 }
