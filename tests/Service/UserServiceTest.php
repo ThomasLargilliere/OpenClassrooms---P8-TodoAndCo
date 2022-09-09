@@ -40,4 +40,28 @@ class UserServiceTest extends KernelTestCase
         // THEN
         $this->assertEmpty($result);
     }
+
+    public function testIsAdminWhenUserConnectedIsAdmin()
+    {
+        // GIVEN
+        $user = (new User)->setRoles(['ROLE_ADMIN']);
+
+        // WHEN
+        $result = $this->userService->isAdminUser($user);
+
+        // THEN
+        $this->assertTrue($result);
+    }
+
+    public function testIsAdminWhenUserConnectedIsNotAdmin()
+    {
+        // GIVEN
+        $user = new User();
+
+        // WHEN
+        $result = $this->userService->isAdminUser($user);
+
+        // THEN
+        $this->assertFalse($result);
+    }
 }
