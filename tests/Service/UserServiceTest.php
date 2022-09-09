@@ -28,4 +28,16 @@ class UserServiceTest extends KernelTestCase
         $this->assertClassHasAttribute('password', User::class);
         $this->assertClassHasAttribute('roles', User::class);
     }
+
+    public function testCreateUser()
+    {
+        // GIVEN
+        $user = (new User)->setPassword('123')->setUsername("Test")->setEmail("test@test.fr");
+
+        // WHEN
+        $result = $this->userService->createUser($user);
+
+        // THEN
+        $this->assertEmpty($result);
+    }
 }
