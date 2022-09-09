@@ -77,4 +77,29 @@ class TaskServiceTest extends KernelTestCase
         // THEN
         $this->assertFalse($result);
     }
+
+    public function testToggleTaskWhenTaskIsFinished()
+    {
+        // GIVEN
+        $task = new Task();
+        $task->setIsDone(true);
+
+        // WHEN
+        $result = $this->taskService->toggleTask($task);
+
+        // THEN
+        $this->assertFalse($result);
+    }
+
+    public function testToggleTaskWhenTaskIsNotFinished()
+    {
+        // GIVEN
+        $task = new Task();
+
+        // WHEN
+        $result = $this->taskService->toggleTask($task);
+
+        // THEN
+        $this->assertTrue($result);
+    }
 }
