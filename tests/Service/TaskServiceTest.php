@@ -148,7 +148,9 @@ class TaskServiceTest extends KernelTestCase
     public function testCreateTask()
     {
         // GIVEN
-        $userConnected = $this->userRepository->findOneByEmail('admin@admin.fr');
+        $user = (new User)->setUsername('toto')->setPassword('123')->setEmail('toto@toto.fr');
+        $this->userRepository->add($user, true);
+        $userConnected = $this->userRepository->findOneByUsername('toto'); 
         $task = (new Task)->setTitle('Title random')->setContent('Content random');
 
         // WHEN
