@@ -39,4 +39,16 @@ class TaskTest extends KernelTestCase
         // THEN
         $this->assertIsObject($result);
     }
+
+    public function testGetTitle()
+    {
+        // GIVEN
+        $task = $this->taskRepository->findOneById(1);
+
+        // WHEN
+        $result = $task->getTitle();
+
+        // THEN
+        $this->assertIsString($result);
+    }
 }
