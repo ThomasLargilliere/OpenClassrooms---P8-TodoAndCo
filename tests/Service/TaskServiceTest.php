@@ -128,4 +128,18 @@ class TaskServiceTest extends KernelTestCase
         // THEN
         $this->assertTrue($result);
     }
+
+    public function testGetTask()
+    {
+        // WHEN
+        $result = $this->taskService->getTask();
+
+        // THEN
+        $this->assertClassHasAttribute('id', Task::class);
+        $this->assertClassHasAttribute('title', Task::class);
+        $this->assertClassHasAttribute('content', Task::class);
+        $this->assertClassHasAttribute('createdAt', Task::class);
+        $this->assertClassHasAttribute('isDone', Task::class);
+        $this->assertClassHasAttribute('author', Task::class);
+    }
 }
