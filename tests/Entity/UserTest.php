@@ -50,4 +50,16 @@ class UserTest extends KernelTestCase
         // THEN
         $this->assertIsString($result);
     }
+
+    public function testGetTasks()
+    {
+        // GIVEN
+        $user = $this->userRepository->findOneById(1);
+
+        // WHEN
+        $result = $user->getTasks();
+
+        // THEN
+        $this->assertIsObject($result);
+    }
 }
