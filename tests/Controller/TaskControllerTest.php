@@ -99,4 +99,75 @@ class TaskControllerTest extends WebTestCase
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }
+
+    public function testDeleteTaskWhenUserIsNotConnected()
+    {
+        // WHEN
+        $crawler = $this->client->request('GET', '/tasks/2/delete');
+
+        // THEN
+        $this->assertResponseRedirects('/login');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-danger');        
+    }
+
+    public function testDeleteTaskWhenUserIsConnectedAndAdminButTaskAuthorIsAno()
+    {
+        // GIVEN
+        $testUser = $this->userRepository->findOneByEmail('admin@admin.fr');
+        $this->client->loginUser($testUser);
+
+        // WHEN
+        $crawler = $this->client->request('GET', '/tasks/2/delete');
+
+        // THEN
+        $this->assertResponseRedirects('/tasks');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-success');        
+    }
+
+    public function testDeleteTaskWhenUserIsConnectedAndAdminButTaskAuthorIsNotAno()
+    {
+        // GIVEN
+        $testUser = $this->userRepository->findOneByEmail('admin@admin.fr');
+        $this->client->loginUser($testUser);
+
+        // WHEN
+        $crawler = $this->client->request('GET', '/tasks/16/delete');
+
+        // THEN
+        $this->assertResponseRedirects('/tasks');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-danger');        
+    }
+
+    public function testDeleteTaskWhenUserIsConnectedAndNotAdminButTaskAuthorIsNotHimself()
+    {
+        // GIVEN
+        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $this->client->loginUser($testUser);
+
+        // WHEN
+        $crawler = $this->client->request('GET', '/tasks/14/delete');
+
+        // THEN
+        $this->assertResponseRedirects('/tasks');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-danger');        
+    }
+
+    public function testDeleteTaskWhenUserIsConnectedAndNotAdminButTaskAuthorIsUserIsConnected()
+    {
+        // GIVEN
+        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $this->client->loginUser($testUser);
+
+        // WHEN
+        $crawler = $this->client->request('GET', '/tasks/13/delete');
+
+        // THEN
+        $this->assertResponseRedirects('/tasks');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-success');        
+    }
 }
