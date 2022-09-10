@@ -2,6 +2,7 @@
 
 namespace App\Tests\Service;
 
+use App\Entity\Task;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -58,6 +59,33 @@ class UserTest extends KernelTestCase
 
         // WHEN
         $result = $user->getTasks();
+
+        // THEN
+        $this->assertIsObject($result);
+    }
+
+    public function testAddTask()
+    {
+        // GIVEN
+        $user = $this->userRepository->findOneById(1);
+        $task = (new Task)->setTitle('Task Title')->setContent('Task Content');
+
+        // WHEN
+        $result = $user->addTask($task);
+
+        // THEN
+        $this->assertIsObject($result);
+    }
+
+    public function testRemoveTask()
+    {
+        // GIVEN
+        $user = $this->userRepository->findOneById(1);
+        $task = (new Task)->setTitle('Task Title')->setContent('Task Content');
+
+        // WHEN
+        $user->addTask($task);
+        $result = $user->removeTask($task);
 
         // THEN
         $this->assertIsObject($result);

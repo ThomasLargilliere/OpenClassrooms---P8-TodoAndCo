@@ -61,5 +61,5 @@ class TaskTest extends KernelTestCase
 
         // THEN
         $this->assertIsString($result);
-    }
+    }  
 }
