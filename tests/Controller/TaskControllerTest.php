@@ -69,7 +69,6 @@ class TaskControllerTest extends WebTestCase
         ]);
 
         // WHEN
-
         $this->client->submit($form);
 
         // THEN
@@ -169,5 +168,69 @@ class TaskControllerTest extends WebTestCase
         $this->assertResponseRedirects('/tasks');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');        
+    }
+
+    public function testEditTaskGetFormWhenUserIsNotConnected()
+    {
+        // WHEN
+        $crawler = $this->client->request('GET', '/tasks/1/edit');
+
+        // THEN
+        $this->assertResponseRedirects('/login');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-danger');  
+    }
+
+    public function testEditTaskGetFormWhenUserIsConnected()
+    {
+        // GIVEN
+        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $this->client->loginUser($testUser);
+
+        // WHEN
+        $crawler = $this->client->request('GET', '/tasks/1/edit');
+
+        // THEN
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testEditTaskSubmitFormWhenUserConnectedIsNotAuthor()
+    {
+        // GIVEN
+        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $this->client->loginUser($testUser);
+        $crawler = $this->client->request('GET', '/tasks/1/edit');
+        $form = $crawler->selectButton('Modifier')->form([
+            'task[title]' => 'Task Title',
+            'task[content]' => 'Task Content'
+        ]);
+
+        // WHEN
+        $this->client->submit($form);
+
+        // THEN
+        $this->assertResponseRedirects('/tasks');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-danger');
+    }
+
+    public function testEditTaskSubmitFormWhenUserConnectedIsAuthor()
+    {
+        // GIVEN
+        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $this->client->loginUser($testUser);
+        $crawler = $this->client->request('GET', '/tasks/11/edit');
+        $form = $crawler->selectButton('Modifier')->form([
+            'task[title]' => 'Task Title',
+            'task[content]' => 'Task Content'
+        ]);
+
+        // WHEN
+        $this->client->submit($form);
+
+        // THEN
+        $this->assertResponseRedirects('/tasks');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-success');
     }
 }
