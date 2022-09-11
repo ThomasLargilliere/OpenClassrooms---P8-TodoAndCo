@@ -96,6 +96,6 @@ class UserController extends AbstractController
     public function needAdmin()
     {
         $this->addFlash('error', 'Vous devez être administrateur pour voir la liste des utilisateurs');
-        return $this->redirectToRoute('app_login');        
+        return $this->redirectToRoute('task_list');       
     }
 }
