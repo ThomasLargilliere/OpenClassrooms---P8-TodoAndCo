@@ -94,4 +94,34 @@ class LoginControllerTest extends WebTestCase
         $this->client->followRedirect();
         $this->assertSelectorTextContains('h2', 'Salut, User 0');
     }
+
+    public function testLogoutWhenUserIsConnected()
+    {
+        // GIVEN
+        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $this->client->loginUser($testUser);
+
+        // WHEN
+        $crawler = $this->client->request('GET', '/logout');
+
+        // THEN
+        $this->assertResponseRedirects();
+        $this->client->followRedirect();
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('.btn.btn-primary', 'Créer un utilisateur');
+        $this->assertSelectorTextContains('.btn.btn-success', 'Se connecter');
+    }
+
+    public function testLogoutWhenUserIsNotConnected()
+    {
+        // WHEN
+        $crawler = $this->client->request('GET', '/logout');
+
+        // THEN
+        $this->assertResponseRedirects();
+        $this->client->followRedirect();
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('.btn.btn-primary', 'Créer un utilisateur');
+        $this->assertSelectorTextContains('.btn.btn-success', 'Se connecter');
+    }
 }
