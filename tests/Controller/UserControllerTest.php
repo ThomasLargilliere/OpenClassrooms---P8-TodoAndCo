@@ -56,4 +56,53 @@ class UserControllerTest extends WebTestCase
         // THEN
         $this->assertResponseIsSuccessful();
     }
+
+    public function testCreateUserForGetForm()
+    {
+        // WHEN
+        $crawler = $this->client->request('GET', '/users/create');
+
+        // THEN
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testCreateUserSubmitForm()
+    {
+        // GIVEN
+        $crawler = $this->client->request('GET', '/users/create');
+        $form = $crawler->selectButton('Ajouter')->form([
+            'user[username]' => 'UserName',
+            'user[email]' => 'email@email.fr',
+            'user[password][first]' => '123',
+            'user[password][second]' => '123',
+            'user[roles]' => 'ROLE_USER'
+        ]);
+
+        // WHEN
+        $this->client->submit($form);
+
+        // THEN
+        $this->assertResponseRedirects('/users/create');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-success');
+    }
+
+    public function testCreateUserSubmitFormButPasswordNotMatch()
+    {
+        // GIVEN
+        $crawler = $this->client->request('GET', '/users/create');
+        $form = $crawler->selectButton('Ajouter')->form([
+            'user[username]' => 'UserName',
+            'user[email]' => 'email@email.fr',
+            'user[password][first]' => '123',
+            'user[password][second]' => '1234',
+            'user[roles]' => 'ROLE_USER'
+        ]);
+
+        // WHEN
+        $this->client->submit($form);
+
+        // THEN
+        $this->assertSelectorTextContains('li', 'Les deux mots de passe doivent correspondre.');
+    }
 }

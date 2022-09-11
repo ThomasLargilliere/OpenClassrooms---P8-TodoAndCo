@@ -43,7 +43,7 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()){
             $this->userService->createUser($user);
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
