@@ -74,13 +74,8 @@ class UserController extends AbstractController
 
             $typeFlash = 'success';
             $messageFlash = 'L\'utilisateur a bien été modifié.';
-
-            if (!$result){
-                $typeFlash = 'error';
-                $messageFlash = 'L\'utilisateur n\'a pas pu être modifié, vous devez être administrateur pour faire cela.';
-            }
-
-            $this->addFlash($typeFlash, $messageFlash);
+            
+            $this->addFlash('success', 'L\'utilisateur n\'a pas pu être modifié, vous devez être administrateur pour faire cela.');
             return $this->redirectToRoute('user_create');
         }
 
