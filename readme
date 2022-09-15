@@ -30,11 +30,3 @@ Projet Todo & Co OpenClassrooms
     symfony server:start
 ```
 8. Accéder au site via http://localhost:8000/
-
-OPTIONNEL :
-
-1. Se connecter :
-```
-    email : admin@admin.fr
-    password : 123
-```
