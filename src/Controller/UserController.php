@@ -18,7 +18,7 @@ class UserController extends AbstractController
     public function __construct(private UserService $userService){}
 
     #[Route('/users', name: 'user_list')]
-    public function listUser()
+    public function listUser(): Response
     {
         $user = $this->getUser();
         if (!$user){
@@ -36,7 +36,7 @@ class UserController extends AbstractController
 
 
     #[Route('/users/create', name: 'user_create')]
-    public function createUser(Request $request)
+    public function createUser(Request $request): Response
     {
         $user = new User();
         $form = $this->createForm(\App\Form\UserType::class, $user);
@@ -54,7 +54,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/users/{id}/edit', name: 'user_edit')]
-    public function editUser(Request $request, User $user)
+    public function editUser(Request $request, User $user): Response
     {
         $userEditer = $this->getUser();
         if (!$userEditer){
@@ -82,13 +82,13 @@ class UserController extends AbstractController
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
     }
 
-    public function needLogin()
+    public function needLogin(): RedirectResponse
     {
         $this->addFlash('error', 'Vous devez être connecté pour voir la liste des utilisateurs');
         return $this->redirectToRoute('app_login');
     }
     
-    public function needAdmin()
+    public function needAdmin(): RedirectResponse
     {
         $this->addFlash('error', 'Vous devez être administrateur pour voir la liste des utilisateurs');
         return $this->redirectToRoute('task_list');       

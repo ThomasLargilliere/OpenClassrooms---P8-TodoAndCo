@@ -15,7 +15,7 @@ class TaskController extends AbstractController
     public function __construct(private TaskService $taskService){}
 
     #[Route('/tasks', name: 'task_list')]
-    public function listTask()
+    public function listTask(): Response
     {
         $tasks = $this->taskService->getTask();
         return $this->render('task/list.html.twig', ['tasks' => $tasks]);
@@ -47,7 +47,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/toggle', name: 'task_toggle')]
-    public function toggleTask(Task $task)
+    public function toggleTask(Task $task): RedirectResponse
     {
         $result = $this->taskService->toggleTask($task);
 
@@ -64,7 +64,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/delete', name: 'task_delete')]
-    public function deleteTask(Task $task)
+    public function deleteTask(Task $task): RedirectResponse
     {
         $user = $this->getUser();
         if ($user === null){
@@ -88,7 +88,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/edit', name: 'task_edit')]
-    public function editTask(Request $request, Task $task)
+    public function editTask(Request $request, Task $task): Response
     {
         $user = $this->getUser();
 
