@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
-use App\Services\TaskService;
+use App\Service\TaskService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -67,6 +67,10 @@ class TaskController extends AbstractController
     public function deleteTask(Task $task)
     {
         $user = $this->getUser();
+        if ($user === null){
+            $this->addFlash('error', 'Impossible de supprimer la tache veuillez vous connecter.');
+            return $this->redirectToRoute('app_login');                
+        }
 
         $result = $this->taskService->deleteTask($task, $user);
 
