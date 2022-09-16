@@ -5,15 +5,15 @@ namespace App\Service;
 
 use App\Entity\Task;
 use App\Entity\User;
-use App\Repository\TaskRepository;
 use App\Service\UserService;
+use App\Repository\TaskRepository;
 
 class TaskService
 {
 
     public function __construct(private TaskRepository $repository, private UserService $userService){}
 
-    public function getTask()
+    public function getTask(): Array
     {
         return $this->repository->findAll();
     }
@@ -60,7 +60,7 @@ class TaskService
      * 
      * @return bool Retourne false si la tâche n'a pas pu être modifié
      */
-    public function editTask(Task $task, User $userConnected)
+    public function editTask(Task $task, User $userConnected): bool
     {
         if ($userConnected !== $task->getAuthor()){
             return false;
