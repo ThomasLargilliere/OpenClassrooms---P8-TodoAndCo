@@ -23,8 +23,7 @@ class UserType extends AbstractType
                 'required' => true,
                 'error_bubbling' => true,
                 'type' => PasswordType::class,
-                'invalid_message' => 'Les deux mots de passe doivent correspondre.',
-                'required' => true,
+                'invalid_message' => 'Les deux mots de passe doivent correspondre.'
             ])
             ->add('email', EmailType::class)
             ->add('roles', ChoiceType::class, [
