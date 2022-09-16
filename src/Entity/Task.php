@@ -43,7 +43,6 @@ class Task
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -67,7 +66,6 @@ class Task
     public function setContent(string $content): self
     {
         $this->content = $content;
-
         return $this;
     }
 
@@ -91,7 +89,6 @@ class Task
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
-
         return $this;
     }
 }

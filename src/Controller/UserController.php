@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Services\UserService;
+use App\Service\UserService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,7 +43,7 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()){
             $this->userService->createUser($user);
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
@@ -74,13 +74,8 @@ class UserController extends AbstractController
 
             $typeFlash = 'success';
             $messageFlash = 'L\'utilisateur a bien été modifié.';
-
-            if (!$result){
-                $typeFlash = 'error';
-                $messageFlash = 'L\'utilisateur n\'a pas pu être modifié, vous devez être administrateur pour faire cela.';
-            }
-
-            $this->addFlash($typeFlash, $messageFlash);
+            
+            $this->addFlash('success', 'L\'utilisateur n\'a pas pu être modifié, vous devez être administrateur pour faire cela.');
             return $this->redirectToRoute('user_create');
         }
 
@@ -96,6 +91,6 @@ class UserController extends AbstractController
     public function needAdmin()
     {
         $this->addFlash('error', 'Vous devez être administrateur pour voir la liste des utilisateurs');
-        return $this->redirectToRoute('app_login');        
+        return $this->redirectToRoute('task_list');       
     }
 }

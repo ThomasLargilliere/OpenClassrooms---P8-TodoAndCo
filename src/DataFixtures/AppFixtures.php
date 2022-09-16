@@ -59,11 +59,13 @@ class AppFixtures extends Fixture
             $manager->persist($task);
         }
 
+        $userName = [ 'Simon', 'Mathieu', 'Thomas' ];
+
         for ($i = 0; $i < 3; $i++){
             $user = new User();
-            $user->setUsername('User ' . $i);
+            $user->setUsername($userName[$i]);
             $user->setPassword('$2y$13$rQJeJZzPvYTrqY4LalaxMeTH8mJY21CewW0s7Ri/i1wWukwhkjr3u'); // 123
-            $user->setEmail('user' .$i . '@user.fr');
+            $user->setEmail($userName[$i] . '@user.fr');
             $user->setRoles(['ROLE_USER']);
             $manager->persist($user);
     
