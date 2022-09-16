@@ -20,7 +20,7 @@ class LoginController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        if ($error != null){
+        if ($error){
             $translated = $translator->trans($error->getMessage());
             $this->addFlash('error', $translated);
         }
