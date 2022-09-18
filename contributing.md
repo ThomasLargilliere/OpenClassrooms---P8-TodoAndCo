@@ -16,9 +16,9 @@ This project is developed with Symfony Framework. Please refer to the [Symfony D
 
 - Code quality is monitored by SymfonyInsight, as you can see the app got a score of 100/100 and a platinum medal.
 
-[![SymfonyInsight](https://insight.symfony.com/projects/5d1c1fa2-64f9-4500-8d6d-630df6bfc8ed/big.svg)](https://insight.symfony.com/projects/5d1c1fa2-64f9-4500-8d6d-630df6bfc8ed)
+[![SymfonyInsight](https://insight.symfony.com/projects/5d1c1fa2-64f9-4500-8d6d-630df6bfc8ed/big.svg)](https://insight.symfony.com/projects/5f1d119d-0d15-4859-bd06-1fa3f7a3a29c/analyses/75)
 
-- SymfonyInsight, will automatically analyze your Pull Request for code quality.
+- Symfony, will automatically analyze your Pull Request for code quality.
 
 - Please make sure to maintain a level of quality equivalent to the platinum medal.
 
