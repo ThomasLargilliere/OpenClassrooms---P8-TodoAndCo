@@ -18,7 +18,7 @@ class TaskTest extends KernelTestCase
     public function testGetTaskId()
     {
         // GIVEN
-        $task = $this->taskRepository->findOneById(1);
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
 
         // WHEN
         $result = $task->getId();
@@ -30,7 +30,7 @@ class TaskTest extends KernelTestCase
     public function testGetTaskCreatedAt()
     {
         // GIVEN
-        $task = $this->taskRepository->findOneById(1);
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
 
         // WHEN
         $result = $task->getCreatedAt();
@@ -42,7 +42,7 @@ class TaskTest extends KernelTestCase
     public function testGetTaskTitle()
     {
         // GIVEN
-        $task = $this->taskRepository->findOneById(1);
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
 
         // WHEN
         $result = $task->getTitle();
@@ -54,7 +54,7 @@ class TaskTest extends KernelTestCase
     public function testGetTaskContent()
     {
         // GIVEN
-        $task = $this->taskRepository->findOneById(1);
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
 
         // WHEN
         $result = $task->getContent();

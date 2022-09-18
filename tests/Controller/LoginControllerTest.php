@@ -27,7 +27,7 @@ class LoginControllerTest extends WebTestCase
     public function testLoginWhenUserIsConnected()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $testUser = $this->userRepository->findOneByUsername('Thomas');
         $this->client->loginUser($testUser);
 
         // WHEN
@@ -63,7 +63,7 @@ class LoginControllerTest extends WebTestCase
         // GIVEN
         $crawler = $this->client->request('GET', '/login');
         $form = $crawler->selectButton('Se connecter')->form([
-            '_username' => 'User 0',
+            '_username' => 'Thomas',
             '_password' => 'fakepassword'
         ]);
 
@@ -82,7 +82,7 @@ class LoginControllerTest extends WebTestCase
         // GIVEN
         $crawler = $this->client->request('GET', '/login');
         $form = $crawler->selectButton('Se connecter')->form([
-            '_username' => 'User 0',
+            '_username' => 'Thomas',
             '_password' => '123'
         ]);
 
@@ -92,13 +92,13 @@ class LoginControllerTest extends WebTestCase
         // THEN
         $this->assertResponseRedirects();
         $this->client->followRedirect();
-        $this->assertSelectorTextContains('h2', 'Salut, User 0');
+        $this->assertSelectorTextContains('h2', 'Salut, Thomas');
     }
 
     public function testLogoutWhenUserIsConnected()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $testUser = $this->userRepository->findOneByUsername('Thomas');
         $this->client->loginUser($testUser);
 
         // WHEN

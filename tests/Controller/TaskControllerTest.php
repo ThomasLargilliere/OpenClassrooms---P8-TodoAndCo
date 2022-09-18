@@ -58,7 +58,7 @@ class TaskControllerTest extends WebTestCase
     public function testCreateTaskForSubmitFormWhenUserIsConnected()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('admin@admin.fr');
+        $testUser = $this->userRepository->findOneByUsername('Admin');
         $this->client->loginUser($testUser);
 
         $crawler = $this->client->request('GET', '/tasks/create');
@@ -79,8 +79,12 @@ class TaskControllerTest extends WebTestCase
 
     public function testToggleTaskWhenTaskIsDone()
     {
+        // GIVEN
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
+        $task->setIsDone(true);
+
         // WHEN
-        $crawler = $this->client->request('GET', '/tasks/1/toggle');
+        $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/toggle');
 
         // THEN
         $this->assertResponseRedirects('/tasks');
@@ -90,8 +94,12 @@ class TaskControllerTest extends WebTestCase
 
     public function testToggleTaskWhenTaskIsNotDone()
     {
+        // GIVEN
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
+        $task->setIsDone(false);
+
         // WHEN
-        $crawler = $this->client->request('GET', '/tasks/3/toggle');
+        $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/toggle');
 
         // THEN
         $this->assertResponseRedirects('/tasks');
@@ -101,8 +109,11 @@ class TaskControllerTest extends WebTestCase
 
     public function testDeleteTaskWhenUserIsNotConnected()
     {
+        // GIVEN
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
+        
         // WHEN
-        $crawler = $this->client->request('GET', '/tasks/2/delete');
+        $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/delete');
 
         // THEN
         $this->assertResponseRedirects('/login');
@@ -113,11 +124,12 @@ class TaskControllerTest extends WebTestCase
     public function testDeleteTaskWhenUserIsConnectedAndAdminButTaskAuthorIsAno()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('admin@admin.fr');
+        $testUser = $this->userRepository->findOneByUsername('Admin');
         $this->client->loginUser($testUser);
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
 
         // WHEN
-        $crawler = $this->client->request('GET', '/tasks/2/delete');
+        $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/delete');
 
         // THEN
         $this->assertResponseRedirects('/tasks');
@@ -128,11 +140,14 @@ class TaskControllerTest extends WebTestCase
     public function testDeleteTaskWhenUserIsConnectedAndAdminButTaskAuthorIsNotAno()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('admin@admin.fr');
+        $testUser = $this->userRepository->findOneByUsername('Admin');
+        $thomas = $this->userRepository->findOneByUsername('Thomas');
         $this->client->loginUser($testUser);
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
+        $task->setAuthor($thomas);
 
         // WHEN
-        $crawler = $this->client->request('GET', '/tasks/16/delete');
+        $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/delete');
 
         // THEN
         $this->assertResponseRedirects('/tasks');
@@ -143,11 +158,15 @@ class TaskControllerTest extends WebTestCase
     public function testDeleteTaskWhenUserIsConnectedAndNotAdminButTaskAuthorIsNotHimself()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $testUser = $this->userRepository->findOneByUsername('Thomas');
         $this->client->loginUser($testUser);
 
+        $admin = $this->userRepository->findOneByUsername('Admin');
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
+        $task->setAuthor($admin);
+
         // WHEN
-        $crawler = $this->client->request('GET', '/tasks/14/delete');
+        $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/delete');
 
         // THEN
         $this->assertResponseRedirects('/tasks');
@@ -158,11 +177,13 @@ class TaskControllerTest extends WebTestCase
     public function testDeleteTaskWhenUserIsConnectedAndNotAdminButTaskAuthorIsUserIsConnected()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $testUser = $this->userRepository->findOneByUsername('Thomas');
         $this->client->loginUser($testUser);
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
+        $task->setAuthor($testUser);
 
         // WHEN
-        $crawler = $this->client->request('GET', '/tasks/13/delete');
+        $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/delete');
 
         // THEN
         $this->assertResponseRedirects('/tasks');
@@ -172,8 +193,11 @@ class TaskControllerTest extends WebTestCase
 
     public function testEditTaskGetFormWhenUserIsNotConnected()
     {
+        // GIVEN 
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
+
         // WHEN
-        $crawler = $this->client->request('GET', '/tasks/1/edit');
+        $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/edit');
 
         // THEN
         $this->assertResponseRedirects('/login');
@@ -184,11 +208,12 @@ class TaskControllerTest extends WebTestCase
     public function testEditTaskGetFormWhenUserIsConnected()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $testUser = $this->userRepository->findOneByUsername('Thomas');
         $this->client->loginUser($testUser);
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
 
         // WHEN
-        $crawler = $this->client->request('GET', '/tasks/1/edit');
+        $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/edit');
 
         // THEN
         $this->assertResponseIsSuccessful();
@@ -197,9 +222,13 @@ class TaskControllerTest extends WebTestCase
     public function testEditTaskSubmitFormWhenUserConnectedIsNotAuthor()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $admin = $this->userRepository->findOneByUsername('Admin');
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
+        $task->setAuthor($admin);
+
+        $testUser = $this->userRepository->findOneByUsername('Thomas');
         $this->client->loginUser($testUser);
-        $crawler = $this->client->request('GET', '/tasks/1/edit');
+        $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/edit');
         $form = $crawler->selectButton('Modifier')->form([
             'task[title]' => 'Task Title',
             'task[content]' => 'Task Content'
@@ -217,9 +246,13 @@ class TaskControllerTest extends WebTestCase
     public function testEditTaskSubmitFormWhenUserConnectedIsAuthor()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $testUser = $this->userRepository->findOneByUsername('Thomas');
         $this->client->loginUser($testUser);
-        $crawler = $this->client->request('GET', '/tasks/11/edit');
+
+        $task = $this->taskRepository->findOneByTitle('Ma super tâche 0');
+        $task->setAuthor($testUser);
+
+        $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/edit');
         $form = $crawler->selectButton('Modifier')->form([
             'task[title]' => 'Task Title',
             'task[content]' => 'Task Content'
@@ -231,6 +264,5 @@ class TaskControllerTest extends WebTestCase
         // THEN
         $this->assertResponseRedirects('/tasks');
         $this->client->followRedirect();
-        $this->assertSelectorExists('.alert.alert-success');
     }
 }

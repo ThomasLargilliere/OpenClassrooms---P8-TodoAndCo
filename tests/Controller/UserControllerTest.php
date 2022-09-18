@@ -32,7 +32,7 @@ class UserControllerTest extends WebTestCase
     public function testListUserWhenUserIsConnectedButNotAdmin()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $testUser = $this->userRepository->findOneByUsername('Thomas');
         $this->client->loginUser($testUser);
 
         // WHEN
@@ -47,7 +47,7 @@ class UserControllerTest extends WebTestCase
     public function testListUserWhenUserIsConnectedAndIsAdmin()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('admin@admin.fr');
+        $testUser = $this->userRepository->findOneByUsername('Admin');
         $this->client->loginUser($testUser);
 
         // WHEN
@@ -108,8 +108,11 @@ class UserControllerTest extends WebTestCase
 
     public function testEditUserWhenUserIsNotConnected()
     {
+        // GIVEN
+        $testUser = $this->userRepository->findOneByUsername('Thomas');
+
         // WHEN
-        $crawler = $this->client->request('GET', '/users/1/edit');
+        $crawler = $this->client->request('GET', '/users/' . $testUser->getId() . '/edit');
 
         // THEN
         $this->assertResponseRedirects('/login');
@@ -120,11 +123,11 @@ class UserControllerTest extends WebTestCase
     public function testEditUserWhenUserIsConnectedButNotAdmin()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('user0@user.fr');
+        $testUser = $this->userRepository->findOneByUsername('Thomas');
         $this->client->loginUser($testUser);
 
         // WHEN
-        $crawler = $this->client->request('GET', '/users/1/edit');
+        $crawler = $this->client->request('GET', '/users/' . $testUser->getId() . '/edit');
 
         // THEN
         $this->assertResponseRedirects('/tasks');
@@ -135,11 +138,11 @@ class UserControllerTest extends WebTestCase
     public function testEditUserWhenUserIsConnectedAndIsAdminForGetForm()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('admin@admin.fr');
+        $testUser = $this->userRepository->findOneByUsername('Admin');
         $this->client->loginUser($testUser);
 
         // WHEN
-        $crawler = $this->client->request('GET', '/users/1/edit');
+        $crawler = $this->client->request('GET', '/users/' . $testUser->getId() . '/edit');
 
         // THEN
         $this->assertResponseIsSuccessful();
@@ -148,9 +151,9 @@ class UserControllerTest extends WebTestCase
     public function testEditUserWhenUserIsConnectedAndIsAdminForSubmitForm()
     {
         // GIVEN
-        $testUser = $this->userRepository->findOneByEmail('admin@admin.fr');
+        $testUser = $this->userRepository->findOneByUsername('Admin');
         $this->client->loginUser($testUser);
-        $crawler = $this->client->request('GET', '/users/1/edit');
+        $crawler = $this->client->request('GET', '/users/' . $testUser->getId() . '/edit');
         $form = $crawler->selectButton('Modifier')->form([
             'user[username]' => 'Test',
             'user[email]' => 'test@test.fr',

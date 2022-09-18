@@ -19,7 +19,7 @@ class UserTest extends KernelTestCase
     public function testGetUserId()
     {
         // GIVEN
-        $user = $this->userRepository->findOneById(1);
+        $user = $this->userRepository->findOneByUsername('Thomas');
 
         // WHEN
         $result = $user->getId();
@@ -31,7 +31,7 @@ class UserTest extends KernelTestCase
     public function testGetUserIdentifier()
     {
         // GIVEN
-        $user = $this->userRepository->findOneById(1);
+        $user = $this->userRepository->findOneByUsername('Thomas');
 
         // WHEN
         $result = $user->getUserIdentifier();
@@ -43,7 +43,7 @@ class UserTest extends KernelTestCase
     public function testGetEmail()
     {
         // GIVEN
-        $user = $this->userRepository->findOneById(1);
+        $user = $this->userRepository->findOneByUsername('Thomas');
 
         // WHEN
         $result = $user->getEmail();
@@ -55,7 +55,7 @@ class UserTest extends KernelTestCase
     public function testGetTasks()
     {
         // GIVEN
-        $user = $this->userRepository->findOneById(1);
+        $user = $this->userRepository->findOneByUsername('Thomas');
 
         // WHEN
         $result = $user->getTasks();
@@ -67,7 +67,7 @@ class UserTest extends KernelTestCase
     public function testAddTask()
     {
         // GIVEN
-        $user = $this->userRepository->findOneById(1);
+        $user = $this->userRepository->findOneByUsername('Thomas');
         $task = (new Task)->setTitle('Task Title')->setContent('Task Content');
 
         // WHEN
@@ -80,7 +80,7 @@ class UserTest extends KernelTestCase
     public function testRemoveTask()
     {
         // GIVEN
-        $user = $this->userRepository->findOneById(1);
+        $user = $this->userRepository->findOneByUsername('Thomas');
         $task = (new Task)->setTitle('Task Title')->setContent('Task Content');
 
         // WHEN
